@@ -1,11 +1,9 @@
-// import { nanoid } from 'nanoid';
-// model.id = nanoid() //=> "V1StGXR8_Z5jdHi6B-myT"
-
 import { Component } from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
-import { nanoid } from 'nanoid';
+import css from './App.module.css';
+// src\components\App.module.css
 
 export class App extends Component {
   state = {
@@ -15,46 +13,53 @@ export class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    name: '',
-    number: '',
     filter: '',
   };
 
-  OnDataChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  };
-
-  makeNewUser = () => {
-    const newUser = {
-      id: nanoid(),
-      name: this.state.name,
-      number: this.state.number,
-    };
+  makeNewUser = obj => {
+    if (
+      this.state.contacts.some(
+        user => user.name.toLowerCase() === obj.name.toLowerCase()
+      )
+    ) {
+      return alert(`${obj.name} is already in contact list`);
+    }
 
     this.setState(prevState => {
-      return { contacts: [...prevState.contacts, newUser] };
+      return { contacts: [...prevState.contacts, obj] };
     });
   };
 
-  deleteUser = (contactId) => {
-this.setState(prevState => ({
-  contacts: prevState.contacts.filter(contact => contact.id !== contactId),
-}));
-  }
+  deleteUser = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
+  };
+
+  handleFilter = e => {
+    this.setState({
+      filter: e.target.value,
+    });
+  };
+
+  getUser = () => {
+    const filteredUser = this.state.filter.toLowerCase();
+    const { contacts } = this.state;
+    return contacts.filter(user =>
+      user.name.toLowerCase().includes(filteredUser)
+    );
+  };
 
   render() {
+    const findUser = this.getUser();
     return (
-      <div>
+      <div className={css.section}>
         <h1>Phonebook</h1>
-        <ContactForm
-          OnDataChange={this.OnDataChange}
-          makeNewUser={this.makeNewUser}
-        />
+        <ContactForm makeNewUser={this.makeNewUser} />
 
         <h2>Contacts</h2>
-        <Filter />
-        <ContactList contacts={this.state.contacts} onDeleteUser={this.deleteUser} />
+        <Filter handleFilter={this.handleFilter} value={this.state.filter} />
+        <ContactList contacts={findUser} onDeleteUser={this.deleteUser} />
       </div>
     );
   }
