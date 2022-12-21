@@ -40,6 +40,7 @@ export class ContactForm extends Component {
               title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
               required
               onChange={this.OnDataChange}
+              value={this.state.name}
             />
           </label>
           <label className={css.label} htmlFor="">
@@ -52,6 +53,7 @@ export class ContactForm extends Component {
               title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
               required
               onChange={this.OnDataChange}
+                value={this.state.number}
             />
           </label>
           <button className={css.button} type="submit">

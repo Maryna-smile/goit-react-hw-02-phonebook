@@ -43,10 +43,10 @@ export class App extends Component {
   };
 
   getUser = () => {
-    const filteredUser = this.state.filter.toLowerCase();
+    const filteredUser = this.state.filter.toLowerCase().trim();
     const { contacts } = this.state;
     return contacts.filter(user =>
-      user.name.toLowerCase().includes(filteredUser)
+      user.name.toLowerCase().trim().includes(filteredUser)
     );
   };
 
